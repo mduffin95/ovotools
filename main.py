@@ -2,6 +2,7 @@ from datetime import date, time, timedelta
 from ovoenergy.models import OVOHalfHour
 from ovoenergy.ovoenergy import OVOEnergy
 import asyncio
+import os
 
 from tariff import Tariff
 
@@ -15,8 +16,8 @@ def daterange(start_date, end_date):
 
 client = OVOEnergy()
 authenticated = asyncio.run(client.authenticate(
-    "user",
-    "pass"
+    os.environ["OVO_USER"],
+    os.environ["OVO_PASS"]
 ))
 
 tariff: Tariff = Tariff(peak=0.3036, off_peak=0.2344)
