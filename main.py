@@ -3,6 +3,7 @@ from ovoenergy.models import OVOHalfHour
 from ovoenergy.ovoenergy import OVOEnergy
 import asyncio
 import os
+import matplotlib.pyplot as plt
 
 from tariff import Tariff
 
@@ -26,14 +27,13 @@ data = []
 
 if authenticated:
 
-    start_date = date(2024, 2, 1)
+    start_date = date(2024, 2, 8)
     end_date = date(2024, 2, 16)
     for single_date in daterange(start_date, end_date):
         string_date = single_date.strftime("%Y-%m-%d")
         half_hourly_usage = asyncio.run(client.get_half_hourly_usage(string_date))
         electricity = half_hourly_usage.electricity
         data.extend([{'datetime': f.interval.start, 'consumption': f.consumption} for f in electricity])
-
 
 df = pd.DataFrame(data)
 
@@ -44,5 +44,7 @@ result = df.groupby([lambda x: x.date(), tariff.peak]).sum()
 result.index = result.index.set_names(['datetime', 'peak'])
 
 result['cost'] = result.apply(lambda x: tariff.cost(x['consumption'], x.name[1]), axis=1)
-
-print(result)
+result = result['consumption'].unstack(level=-1)
+plot = result.plot(kind='bar', stacked=True)
+fig = plot.get_figure()
+fig.savefig("energy.png")
