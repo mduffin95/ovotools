@@ -1,4 +1,4 @@
-FROM cyrilix/numpy:latest
+FROM sdanaipat/numpy:3.7-slim
 #LABEL authors="matthew"
 
 RUN mkdir /app
