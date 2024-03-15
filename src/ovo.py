@@ -1,8 +1,6 @@
 from datetime import date, timedelta, datetime
 from ovoenergy.ovoenergy import OVOEnergy
 import asyncio
-import os
-import json
 import boto3
 from botocore.config import Config
 
@@ -42,7 +40,7 @@ def load():
     if authenticated:
         print("authenticated")
 
-        single_date = date(2024, 3, 14)
+        single_date = date.today() - timedelta(days=1)
         session = boto3.Session()
         write_client = session.client(
             'timestream-write',
