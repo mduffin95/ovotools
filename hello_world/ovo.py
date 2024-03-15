@@ -25,7 +25,7 @@ def write_records(write_client, records):
 
 
 def load():
-    # Create a Systems Manager client
+    # Create a Systems Manager ovo_client
     ssm = boto3.client('ssm', region_name='eu-west-1')
 
     # Get a parameter
@@ -36,8 +36,8 @@ def load():
     user = user_param['Parameter']['Value']
     password = pass_param['Parameter']['Value']
 
-    client = OVOEnergy()
-    authenticated = asyncio.run(client.authenticate(user, password))
+    ovo_client = OVOEnergy()
+    authenticated = asyncio.run(ovo_client.authenticate(user, password))
 
     if authenticated:
         print("authenticated")
@@ -48,7 +48,7 @@ def load():
                                                                         retries={'max_attempts': 10}))
 
         string_date = single_date.strftime("%Y-%m-%d")
-        half_hourly_usage = asyncio.run(client.get_half_hourly_usage(string_date))
+        half_hourly_usage = asyncio.run(ovo_client.get_half_hourly_usage(string_date))
         electricity = half_hourly_usage.electricity
 
         dimensions = [
@@ -73,7 +73,7 @@ def load():
                     write_records(write_client, records)
                     records = []
 
-                except client.exceptions.RejectedRecordsException as err:
+                except write_client.exceptions.RejectedRecordsException as err:
                     print("Error:", err)
                 except Exception as err:
                     print("Error:", err)
