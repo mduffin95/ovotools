@@ -16,6 +16,14 @@ def current_milli_time(time: datetime) -> str:
     return str(int(round(time.timestamp() * 1000)))
 
 
+def write_records(write_client, records):
+    write_client.write_records(
+        databasename="home",
+        tablename="electricity",
+        records=records,
+        commonattributes={})
+
+
 def load():
     # Create a Systems Manager client
     ssm = boto3.client('ssm', region_name='eu-west-1')
@@ -62,32 +70,22 @@ def load():
             records.append(record)
             if len(records) == 100:
                 try:
-                    result = write_client.write_records(
-                        DatabaseName="home",
-                        TableName="electricity",
-                        Records=records,
-                        CommonAttributes={})
-
-                    # reset the batch
+                    write_records(write_client, records)
                     records = []
-                    print("WriteRecords Status: [%s]" % result['ResponseMetadata']['HTTPStatusCode'])
+
                 except client.exceptions.RejectedRecordsException as err:
                     print("Error:", err)
                 except Exception as err:
                     print("Error:", err)
 
         if len(records) > 0:
-            result = write_client.write_records(
-                DatabaseName="home",
-                TableName="electricity",
-                Records=records,
-                CommonAttributes={})
-
+            write_records(write_client, records)
 
     return {
         'statusCode': 200,
         'body': json.dumps('written')
     }
+
 
 if __name__ == "__main__":
     load()
