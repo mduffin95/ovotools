@@ -44,8 +44,9 @@ def load():
 
         single_date = date(2024, 3, 14)
         session = boto3.Session()
-        write_client = session.client('timestream-write', config=Config(read_timeout=20, max_pool_connections=5000,
-                                                                        retries={'max_attempts': 10}))
+        write_client = session.client(
+            'timestream-write',
+            config=Config(read_timeout=20, max_pool_connections=5000, retries={'max_attempts': 10}))
 
         string_date = single_date.strftime("%Y-%m-%d")
         half_hourly_usage = asyncio.run(ovo_client.get_half_hourly_usage(string_date))
@@ -80,11 +81,6 @@ def load():
 
         if len(records) > 0:
             write_records(write_client, records)
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps('written')
-    }
 
 
 if __name__ == "__main__":
