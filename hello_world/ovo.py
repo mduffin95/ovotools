@@ -49,15 +49,15 @@ def load():
         ]
         records = []
         for half_hour in electricity:
-            start_time = half_hour.interval.start
-            if start_time < (datetime.now() - timedelta(days=1)):
+            end_time = half_hour.interval.end
+            if end_time < (datetime.now() - timedelta(days=1)):
                 continue
             record = {
                 'Dimensions': dimensions,
                 'MeasureName': 'consumption',
                 'MeasureValue': str(half_hour.consumption),
                 'MeasureValueType': 'DOUBLE',
-                'Time': current_milli_time(half_hour.interval.start)
+                'Time': end_time
             }
             records.append(record)
             if len(records) == 100:
