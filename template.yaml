@@ -26,6 +26,12 @@ Resources:
           Properties:
             Schedule: cron(0 * * * ? *)
             Enabled: True
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "OVO_USER"
+        - SSMParameterReadPolicy:
+            ParameterName: "OVO_PASS"
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
