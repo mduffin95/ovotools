@@ -16,10 +16,10 @@ def current_milli_time(time: datetime) -> str:
 
 def write_records(write_client, records):
     write_client.write_records(
-        databasename="home",
-        tablename="electricity",
-        records=records,
-        commonattributes={})
+        DatabaseName="home",
+        TableName="electricity",
+        Records=records,
+        CommonAttributes={})
 
 
 def load():
