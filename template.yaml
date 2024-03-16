@@ -28,7 +28,7 @@ Resources:
         ScheduledLambdaExecution:
           Type: Schedule
           Properties:
-            Schedule: cron(0 */12 * * ? *) # Every 12 hours
+            Schedule: cron(0 9,21 * * ? *) # 9am and 9pm
             Enabled: True
       Policies:
         - SSMParameterReadPolicy:
