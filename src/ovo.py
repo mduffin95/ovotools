@@ -57,8 +57,8 @@ def load():
         records = []
         for half_hour in electricity:
             end_time = half_hour.interval.end
-            if end_time < (datetime.now() - timedelta(days=1)):
-                continue
+            # if end_time < (datetime.now() - timedelta(days=1)):
+            #     continue
             record = {
                 'Dimensions': dimensions,
                 'MeasureName': 'consumption',
