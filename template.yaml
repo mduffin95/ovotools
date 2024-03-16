@@ -11,6 +11,10 @@ Globals:
     Timeout: 10
     MemorySize: 128
 
+Parameters:
+  DatabaseName:
+    Type: String
+
 Resources:
   ScheduledFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -24,13 +28,26 @@ Resources:
         ScheduledLambdaExecution:
           Type: Schedule
           Properties:
-            Schedule: cron(0 * * * ? *)
+            Schedule: cron(0 */12 * * ? *) # Every 12 hours
             Enabled: True
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: "OVO_USER"
         - SSMParameterReadPolicy:
             ParameterName: "OVO_PASS"
+        - Statement:
+          - Sid: TimestreamDescribeEndpoints
+            Effect: Allow
+            Action:
+              - timestream:DescribeEndpoints
+            Resource: "*"
+        - Statement:
+          - Sid: TimestreamWrite
+            Effect: Allow
+            Action:
+              - timestream:WriteRecords
+            Resource:
+              !Sub 'arn:aws:timestream:${AWS::Region}:${AWS::AccountId}:database/${DatabaseName}/*'
 
 
 Outputs:
