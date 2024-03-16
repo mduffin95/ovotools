@@ -10,7 +10,7 @@ def daterange(start_date, end_date):
         yield start_date + timedelta(n)
 
 
-def current_milli_time(time: datetime) -> str:
+def milli_time(time: datetime) -> str:
     return str(int(round(time.timestamp() * 1000)))
 
 
@@ -64,7 +64,7 @@ def load():
                 'MeasureName': 'consumption',
                 'MeasureValue': str(half_hour.consumption),
                 'MeasureValueType': 'DOUBLE',
-                'Time': end_time
+                'Time': milli_time(end_time)
             }
             records.append(record)
             if len(records) == 100:
