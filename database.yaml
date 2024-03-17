@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Database"
+
+Parameters:
+  DatabaseName:
+    Type: String
+    Default: "home"
+
+Resources:
+  TimestreamDatabase:
+    Type: AWS::Timestream::Database
+    UpdateReplacePolicy: "Delete"
+    DeletionPolicy: "Delete"
+    Properties:
+      DatabaseName: !Ref DatabaseName
+
+  TimestreamTableElectricity:
+    Type: AWS::Timestream::Table
+    UpdateReplacePolicy: "Delete"
+    DeletionPolicy: "Delete"
+    Properties:
+      DatabaseName: !Ref DatabaseName
+      TableName: "electricity"
+      RetentionProperties:
+        MagneticStoreRetentionPeriodInDays: "1095"
+        MemoryStoreRetentionPeriodInHours: "48"
+      MagneticStoreWriteProperties:
+        EnableMagneticStoreWrites: false
+
+  TimestreamTableTempHumidity:
+    Type: AWS::Timestream::Table
+    UpdateReplacePolicy: "Delete"
+    DeletionPolicy: "Delete"
+    Properties:
+      DatabaseName: !Ref DatabaseName
+      TableName: "temp-humidity"
+      RetentionProperties:
+        MagneticStoreRetentionPeriodInDays: "1095"
+        MemoryStoreRetentionPeriodInHours: "24"
+      MagneticStoreWriteProperties:
+        EnableMagneticStoreWrites: true
+
