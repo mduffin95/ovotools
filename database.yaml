@@ -23,7 +23,7 @@ Resources:
       TableName: "electricity"
       RetentionProperties:
         MagneticStoreRetentionPeriodInDays: "1095"
-        MemoryStoreRetentionPeriodInHours: "48"
+        MemoryStoreRetentionPeriodInHours: "48" # Longer period allows us to insert yesterday's consumption data
       MagneticStoreWriteProperties:
         EnableMagneticStoreWrites: false
 
